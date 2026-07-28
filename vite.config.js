@@ -1,9 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [react()],
-  css: {
-    transformer: 'postcss', // Evita que lightningcss falle con las reglas de Tailwind v4
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+  build: {
+    cssMinify: 'esbuild', // <-- Esto apaga el motor conflictivo de lightningcss
   },
 })
