@@ -7,7 +7,4 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  build: {
-    cssMinify: 'esbuild', // <-- Esto apaga el motor conflictivo de lightningcss
-  },
 })
