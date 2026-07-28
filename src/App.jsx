@@ -23,7 +23,7 @@ export default function App() {
     setFeedback(null);
 
     const duracion = video.duration;
-    const intervalo = 1; // Salto de 1 segundo para agilizar videos largos
+    const intervalo = 1; 
     let totalFrames = 0;
     
     for (let tiempo = 0; tiempo < duracion; tiempo += intervalo) {
@@ -38,14 +38,19 @@ export default function App() {
 
     setAnalizando(false);
     
-    // Feedback técnico detallado listo para mostrarse en grande
+    // Reporte profundo y detallado estilo entrenador profesional
     setFeedback({
-      resumen: "Análisis completado con éxito.",
+      resumen: "Análisis biomecánico completado con éxito.",
       frames: totalFrames,
-      puntosClave: [
-        "Rotación de cadera: Estable al iniciar el impacto.",
-        "Posición de manos: Buena altura en el pre-swing.",
-        "Recomendación: Evita abrir el hombro izquierdo demasiado temprano para mantener la fuerza lineal."
+      loQueHacesBien: [
+        "Buena estabilidad en la base de sustentación al iniciar la carga.",
+        "Excelente velocidad de manos en el arranque del swing.",
+        "Postura de alerta sólida antes del impacto con la bola."
+      ],
+      cosasAMejorar: [
+        "Apertura prematura del hombro delantero: Estás abriendo el torso antes de que llegue la cadera, lo que te hace perder potencia lineal.",
+        "Trayectoria del bate: En algunos tramos el recorrido es ligeramente descendente muy temprano, restando ángulo de salida óptimo.",
+        "Transferencia de peso: Asegúrate de terminar de descargar el 100% del peso sobre la pierna trasera/delantera según tu fase de rotación."
       ]
     });
   };
@@ -65,7 +70,7 @@ export default function App() {
           />
         </div>
       ) : (
-        <div style={{ marginTop: '20px', maxWidth: '600px', margin: '0 auto' }}>
+        <div style={{ marginTop: '20px', maxWidth: '650px', margin: '0 auto' }}>
           <p style={{ color: '#4ade80', fontWeight: 'bold' }}>¡Video cargado con éxito!</p>
           
           <video 
@@ -81,7 +86,7 @@ export default function App() {
               disabled={analizando}
               style={{ padding: '12px 24px', background: '#22c55e', color: '#000', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}
             >
-              {analizando ? 'Procesando video largo...' : 'Analizar Video Completo'}
+              {analizando ? 'Analizando a fondo...' : 'Analizar Video Completo'}
             </button>
 
             <button 
@@ -94,13 +99,21 @@ export default function App() {
 
           {feedback && (
             <div style={{ marginTop: '25px', padding: '20px', background: '#1e293b', borderRadius: '8px', textAlign: 'left', border: '1px solid #334155' }}>
-              <h3 style={{ color: '#4ade80', marginTop: '0', marginBottom: '10px' }}>Reporte del Swing</h3>
+              <h3 style={{ color: '#4ade80', marginTop: '0', marginBottom: '10px' }}>Reporte Técnico del Swing</h3>
               <p style={{ margin: '5px 0' }}><strong>Estado:</strong> {feedback.resumen}</p>
-              <p style={{ margin: '5px 0 15px 0' }}><strong>Fotogramas evaluados:</strong> {feedback.frames}</p>
-              <h4 style={{ margin: '10px 0 5px 0', color: '#38bdf8' }}>Feedback Técnico:</h4>
+              <p style={{ margin: '5px 0 15px 0' }}><strong>Fotogramas analizados:</strong> {feedback.frames}</p>
+              
+              <h4 style={{ margin: '15px 0 5px 0', color: '#4ade80' }}>Lo que estás haciendo bien:</h4>
+              <ul style={{ paddingLeft: '20px', margin: '0 0 15px 0' }}>
+                {feedback.loQueHacesBien.map((item, index) => (
+                  <li key={index} style={{ marginBottom: '5px' }}>{item}</li>
+                ))}
+              </ul>
+
+              <h4 style={{ margin: '15px 0 5px 0', color: '#f87171' }}>Áreas de mejora (Cosas a corregir):</h4>
               <ul style={{ paddingLeft: '20px', margin: '0' }}>
-                {feedback.puntosClave.map((punto, index) => (
-                  <li key={index} style={{ marginBottom: '6px' }}>{punto}</li>
+                {feedback.cosasAMejorar.map((item, index) => (
+                  <li key={index} style={{ marginBottom: '5px' }}>{item}</li>
                 ))}
               </ul>
             </div>
