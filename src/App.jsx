@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 
 export default function App() {
   const [videoFile, setVideoFile] = useState(null)
-  const inputRef = useRef(null)
+  const fileInputRef = useRef(null)
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0]
@@ -20,7 +20,7 @@ export default function App() {
       <main style={{ maxWidth: '600px', margin: '0 auto' }}>
         {!videoFile ? (
           <div 
-            onClick={() => inputRef.current?.click()}
+            onClick={() => fileInputRef.current?.click()}
             style={{
               border: '2px dashed #30363d',
               borderRadius: '16px',
@@ -31,7 +31,7 @@ export default function App() {
             }}
           >
             <input 
-              ref={inputRef}
+              ref={fileInputRef}
               type="file" 
               accept="video/*" 
               style={{ display: 'none' }} 
@@ -55,11 +55,11 @@ export default function App() {
           </div>
         ) : (
           <div style={{ textAlign: 'center' }}>
-            <p style={{ color: '#3fb950', marginBottom: '15px' }}>¡Video cargado con éxito!</p>
+            <p style={{ color: '#3fb950', marginBottom: '15px', fontWeight: '600' }}>¡Video cargado con éxito!</p>
             <video 
               controls 
               src={URL.createObjectURL(videoFile)} 
-              style={{ width: '100%', maxHeight: '400px', borderRadius: '12px', backgroundColor: 'black' }}
+              style={{ width: '100%', maxHeight: '450px', borderRadius: '12px', backgroundColor: 'black' }}
             />
             <button 
               onClick={() => setVideoFile(null)}
@@ -70,6 +70,7 @@ export default function App() {
                 border: 'none',
                 padding: '8px 16px',
                 borderRadius: '6px',
+                fontWeight: '600',
                 cursor: 'pointer'
               }}
             >
