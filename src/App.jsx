@@ -30,13 +30,6 @@ export default function VideoUploader({ onSelect }) {
         ref={inputRef}
         type="file"
         accept="video/*"
-        <input
-  ref={inputRef}
-  type="file"
-  accept="video/*"
-  className="hidden"
-  onChange={(e) => handleFiles(e.target.files)}
-/>
         className="hidden"
         onChange={(e) => handleFiles(e.target.files)}
       />
