@@ -1,52 +1,83 @@
-import { useRef, useState } from 'react'
+import { useState, useRef } from 'react'
 
-export default function VideoUploader({ onSelect }) {
+export default function App() {
+  const [videoFile, setVideoFile] = useState(null)
   const inputRef = useRef(null)
-  const [dragging, setDragging] = useState(false)
 
-  const handleFiles = (files) => {
-    const file = files?.[0]
-    if (file && file.type.startsWith('video/')) onSelect(file)
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setVideoFile(file)
+    }
   }
 
   return (
-    <div
-      onDragOver={(e) => {
-        e.preventDefault()
-        setDragging(true)
-      }}
-      onDragLeave={() => setDragging(false)}
-      onDrop={(e) => {
-        e.preventDefault()
-        setDragging(false)
-        handleFiles(e.dataTransfer.files)
-      }}
-      onClick={() => inputRef.current?.click()}
-      className={`rounded-2xl border-2 border-dashed px-6 py-10 text-center cursor-pointer transition-colors ${
-        dragging ? 'border-amber bg-dugout' : 'border-dugout-line bg-dugout/60'
-      }`}
-    >
-      <input
-        ref={inputRef}
-        type="file"
-        accept="video/*"
-        className="hidden"
-        onChange={(e) => handleFiles(e.target.files)}
-      />
-      <div className="mx-auto h-16 w-16 rounded-full bg-field-night border border-dugout-line flex items-center justify-center mb-4">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-clay-bright">
-          <rect x="3" y="5" width="12" height="14" rx="2" />
-          <path d="M15 9.5 21 6v12l-6-3.5" />
-        </svg>
-      </div>
-      <p className="font-display text-2xl uppercase tracking-wide">Sube tu sesión</p>
-      <p className="text-chalk-dim text-sm mt-1 max-w-xs mx-auto">
-        Video completo de varios minutos. Se procesa en tu teléfono — nada se
-        sube a internet.
-      </p>
-      <span className="inline-block mt-4 rounded-full bg-clay px-5 py-2 font-display uppercase tracking-wide text-base">
-        Elegir video
-      </span>
+    <div style={{ minHeight: '100vh', backgroundColor: '#0d1117', color: '#f0f6fc', padding: '20px', fontFamily: 'system-ui, sans-serif' }}>
+      <header style={{ marginBottom: '24px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: '0' }}>Hitting Coach</h1>
+      </header>
+
+      <main style={{ maxWidth: '600px', margin: '0 auto' }}>
+        {!videoFile ? (
+          <div 
+            onClick={() => inputRef.current?.click()}
+            style={{
+              border: '2px dashed #30363d',
+              borderRadius: '16px',
+              padding: '40px 20px',
+              textAlign: 'center',
+              backgroundColor: '#161b22',
+              cursor: 'pointer'
+            }}
+          >
+            <input 
+              ref={inputRef}
+              type="file" 
+              accept="video/*" 
+              style={{ display: 'none' }} 
+              onChange={handleFileChange}
+            />
+            <p style={{ fontSize: '1.2rem', fontWeight: '600', margin: '0 0 10px 0' }}>Sube tu sesión</p>
+            <p style={{ color: '#8b949e', fontSize: '0.9rem', margin: '0 0 20px 0' }}>
+              Video completo de varios minutos. Se procesa en tu dispositivo — nada se sube a internet.
+            </p>
+            <button style={{
+              backgroundColor: '#238636',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}>
+              Elegir video
+            </button>
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ color: '#3fb950', marginBottom: '15px' }}>¡Video cargado con éxito!</p>
+            <video 
+              controls 
+              src={URL.createObjectURL(videoFile)} 
+              style={{ width: '100%', maxHeight: '400px', borderRadius: '12px', backgroundColor: 'black' }}
+            />
+            <button 
+              onClick={() => setVideoFile(null)}
+              style={{
+                marginTop: '20px',
+                backgroundColor: '#da3633',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                cursor: 'pointer'
+              }}
+            >
+              Elegir otro video
+            </button>
+          </div>
+        )}
+      </main>
     </div>
   )
 }
