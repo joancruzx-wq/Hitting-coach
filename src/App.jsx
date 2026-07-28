@@ -1,65 +1,84 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { VitePWA } from 'vite-plugin-pwa'
+import { useState, useRef } from 'react'
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
-      manifestFilename: 'manifest.json',
-      workbox: {
-        // Los videos de sesión se procesan en memoria y no deben cachearse;
-        // solo cacheamos el shell de la app (HTML/CSS/JS/íconos).
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
-        navigateFallbackDenylist: [/^\/api\//],
-        runtimeCaching: [
-          {
-            // Modelo de MediaPipe Pose: se cachea la primera vez que se usa
-            // para que la detección funcione sin conexión después.
-            urlPattern: ({ url }) =>
-              url.hostname === 'storage.googleapis.com' ||
-              url.pathname.includes('mediapipe'),
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'mediapipe-model-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 90 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-        ],
-      },
-      manifest: {
-        name: 'Hitting Coach — Análisis de Swing',
-        short_name: 'Hitting Coach',
-        description:
-          'Analiza la mecánica de tu swing, registra tus entrenamientos de bateo y sigue tu progreso, todo desde el teléfono.',
-        theme_color: '#10201A',
-        background_color: '#10201A',
-        display: 'standalone',
-        orientation: 'portrait',
-        start_url: '/',
-        scope: '/',
-        lang: 'es',
-        icons: [
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          {
-            src: 'maskable-icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable',
-          },
-        ],
-      },
-    }),
-  ],
-  worker: {
-    format: 'es',
-  },
-})
+export default function App() {
+  const [videoFile, setVideoFile] = useState(null)
+  const fileInputRef = useRef(null)
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setVideoFile(file)
+    }
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: '#10201A', color: '#f1ede3', padding: '20px', fontFamily: 'system-ui, sans-serif' }}>
+      <header style={{ marginBottom: '24px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: '0' }}>Hitting Coach</h1>
+      </header>
+
+      <main style={{ maxWidth: '600px', margin: '0 auto' }}>
+        {!videoFile ? (
+          <div 
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              border: '2px dashed #2a4136',
+              borderRadius: '16px',
+              padding: '40px 20px',
+              textAlign: 'center',
+              backgroundColor: '#1b2e26',
+              cursor: 'pointer'
+            }}
+          >
+            <input 
+              ref={fileInputRef}
+              type="file" 
+              accept="video/*" 
+              style={{ display: 'none' }} 
+              onChange={handleFileChange}
+            />
+            <p style={{ fontSize: '1.2rem', fontWeight: '600', margin: '0 0 10px 0' }}>Sube tu sesión</p>
+            <p style={{ color: '#cfc9ba', fontSize: '0.9rem', margin: '0 0 20px 0' }}>
+              Video completo de varios minutos. Se procesa en tu dispositivo — nada se sube a internet.
+            </p>
+            <button style={{
+              backgroundColor: '#c2542d',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}>
+              Elegir video
+            </button>
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ color: '#e3a33d', marginBottom: '15px', fontWeight: '600' }}>¡Video cargado con éxito!</p>
+            <video 
+              controls 
+              src={URL.createObjectURL(videoFile)} 
+              style={{ width: '100%', maxHeight: '450px', borderRadius: '12px', backgroundColor: 'black' }}
+            />
+            <button 
+              onClick={() => setVideoFile(null)}
+              style={{
+                marginTop: '20px',
+                backgroundColor: '#c2542d',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+            >
+              Elegir otro video
+            </button>
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}
